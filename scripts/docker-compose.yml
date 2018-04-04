@@ -40,7 +40,18 @@ services:
       - 9000:9000
     command: server /data
 
+  zoo1:
+    image: zookeeper
+    ports:
+      - 2181:2181
+    environment:
+      ZOO_MY_ID: 1
+    volumes:
+      - ./zoo.1.cfg:/conf/zoo.cfg
+      - zoo1-data:/data
+
 volumes:
   db-data:
   minio-data:
+  zoo1-data:
 
