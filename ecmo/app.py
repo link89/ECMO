@@ -2,24 +2,31 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
+import tornado.auth
+import tornado.gen
+import tornado.concurrent
 
-from tornado.options import define, options
+from ecmo.config import PORT
+from ecmo.config import KEYCLOAK_OPENID_CONFIG, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET
 
-define("port", default=8888, help="run on the given port", type=int)
 
 
-class MainHandler(tornado.web.RequestHandler):
+class BaseHandler(tornado.web.RequestHandler):
+    pass
+
+
+class MainHandler(BaseHandler):
+    @tornado.gen.coroutine
     def get(self):
         self.write("Hello, world")
 
 
 def main():
-    tornado.options.parse_command_line()
     application = tornado.web.Application([
         (r"/", MainHandler),
     ])
     http_server = tornado.httpserver.HTTPServer(application)
-    http_server.listen(options.port)
+    http_server.listen(PORT)
     tornado.ioloop.IOLoop.current().start()
 
 
